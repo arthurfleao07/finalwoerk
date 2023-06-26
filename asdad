@@ -1,0 +1,205 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Aluno {
+    private String matricula;
+    private String nome;
+    private String curso;
+    private String email;
+
+    public Aluno(String matricula, String nome, String curso, String email) {
+        matricula = matricula;
+        nome = nome;
+        curso = curso;
+        email = email;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCurso() {
+        return curso;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+}
+
+class Time {
+    private String nome;
+    private List<Aluno> alunos;
+    private double[] notas;
+
+    public Time(String nome) {
+        this.nome = nome;
+        this.alunos = new ArrayList<>();
+        this.notas = new double[5];
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void adicionarAluno(Aluno aluno) {
+        alunos.add(aluno);
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setNota(int indiceAvaliador, double nota) {
+        notas[indiceAvaliador] = nota;
+    }
+
+    public double calcularMedia() {
+        double soma = 0;
+        for (double nota : notas) {
+            soma += nota;
+        }
+        return soma / notas.length;
+    }
+}
+
+class Hackatona {
+    private List<Time> times;
+    private List<String> avaliadores;
+
+    public Hackatona() {
+        this.times = new ArrayList<>();
+        this.avaliadores = new ArrayList<>();
+    }
+
+    public void criarTime(String nomeTime) {
+        if (times.size() >= 15) {
+            System.out.println("Limite de times atingido.");
+            return;
+        }
+        Time time = new Time(nomeTime);
+        times.add(time);
+        System.out.println("Time '" + nomeTime + "' criado com sucesso.");
+    }
+
+    public void adicionarAvaliador(String nomeAvaliador) {
+        if (avaliadores.size() >= 5) {
+            System.out.println("Limite de avaliadores atingido.");
+            return;
+        }
+        avaliadores.add(nomeAvaliador);
+        System.out.println("Avaliador '" + nomeAvaliador + "' adicionado com sucesso.");
+    }
+
+    public void adicionarAlunoAoTime(String nomeTime, Aluno aluno) {
+        Time time = encontrarTime(nomeTime);
+        if (time == null) {
+            System.out.println("Time '" + nomeTime + "' não encontrado.");
+            return;
+        }
+        if (time.getAlunos().size() >= 6) {
+            System.out.println("Limite de alunos no time atingido.");
+            return;
+        }
+        if (!verificarCursoDiferente(time, aluno)) {
+            System.out.println("O time deve ter pelo menos um aluno de curso diferente.");
+            return;
+        }
+        time.adicionarAluno(aluno);
+        
+    }
+    public Time encontrarTime(String nomeTime) {
+    for (Time time : times) {
+        if (time.getNome().equals(nomeTime)) {
+            return time;
+        }
+    }
+    return null;
+    }
+    private boolean verificarCursoDiferente(Time time, Aluno novoAluno) {
+        for (Aluno aluno : time.getAlunos()) {
+            if (!aluno.getCurso().equals(novoAluno.getCurso())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
+
+    public class tf {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int limiteTimes = 15;
+        int limiteParticipantes = 6;
+        int quantidadeTimes;
+
+        do {
+            System.out.print("Digite a quantidade de times participantes (limite de 15 times): ");
+            quantidadeTimes = scanner.nextInt();
+
+            if (quantidadeTimes > limiteTimes) {
+                System.out.println("Limite de times excedido! A quantidade de times deve ser menor ou igual a " + limiteTimes);
+            }
+        } while (quantidadeTimes > limiteTimes);
+
+        System.out.println("Quantidade de times participantes: " + quantidadeTimes);
+        String[][] participantes = new String[quantidadeTimes][limiteMaximoParticipantes];
+
+        for (int i = 0; i < quantidadeTimes; i++) {
+            System.out.println("Time " + (i + 1));
+
+            boolean cursoDiferente = false;
+            boolean limiteMinimoAlcancado = false;
+            int quantidadeParticipantes = 0;
+
+            while (quantidadeParticipantes < limiteMaximoParticipantes) {
+                System.out.println("Participante " + (quantidadeParticipantes + 1));
+                System.out.print("Matrícula (ou FIM para encerrar): ");
+                String matricula = scanner.next();
+
+                if (matricula.equalsIgnoreCase("FIM")) {
+                    if (quantidadeParticipantes < limiteMinimoParticipantes) {
+                        System.out.println("O time precisa ter pelo menos " + limiteMinimoParticipantes + " participantes!");
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+
+                System.out.print("Nome: ");
+                String nome = scanner.next();
+
+                System.out.print("Curso: ");
+                String curso = scanner.next();
+
+                System.out.print("E-mail: ");
+                String email = scanner.next();
+
+                participantes[i][quantidadeParticipantes] = matricula + ";" + nome + ";" + curso + ";" + email;
+
+                if (quantidadeParticipantes > 0 && !cursoDiferente && curso.equals(participantes[i][0].split(";")[2])) {
+                    cursoDiferente = true;
+                }
+
+                quantidadeParticipantes++;
+
+                if (quantidadeParticipantes >= limiteMinimoParticipantes) {
+                    limiteMinimoAlcancado = true;
+                }
+            }
+
+            if (!cursoDiferente && limiteMinimoAlcancado) {
+                System.out.println("O time precisa ter pelo menos 1 integrante cursando um curso diferente!");
+                i--; 
+            }
+        }
+
+        System.out.println("\nDados
+    }
+}
